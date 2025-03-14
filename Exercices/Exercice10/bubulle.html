@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="jquery.min.js"></script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Bubulle | Exercice jQuery</title>
+	<style>
+	body {
+		font-family:Calibri,
+		sans-serif;
+	}
+	#nav {
+		position:relative;
+		background-color:#444;
+		z-index:5;
+	}
+	#menu {
+		display:flex;
+		flex-direction:row;
+		position:relative;
+		z-index: 7;
+	}
+	#menu a {
+		color:#fff;
+		flex:1;
+		padding:1rem;
+		text-align:center;
+		text-decoration:none;
+		font-size:1.5rem;
+	}
+	#bubulle { 
+		background-color:#c048; 
+		border-radius:8px;
+		position:absolute; 
+		top:-8px; left:40vw; 
+		width:20vw;
+		height:4.8rem;
+		z-index: 6;
+		opacity: 0;
+		transition: all 600ms ease-in-out;
+	}
+	#nav:hover #bubulle {
+		opacity: 1;
+	}
+	
+	@media screen and (max-width:560px) { 
+		#menu { flex-direction:column; }
+		#bubulle {
+			transition: all 400ms ease-in-out;
+		}
+	}
+	</style>
+</head>
+<body>
+	<nav id="nav">
+		<div id="menu">
+			<a href="#">Africa</a>
+			<a href="#">America</a>
+			<a href="#">Asia</a>
+			<a href="#">Europa</a>
+			<a href="#">Oceania</a>
+		</div>
+		<div id="bubulle"></div>
+	</nav>
+	<script>
+		$("#menu a").on("mouseenter",function(){
+			// Gap = total pixel en plus au dessus et en dessous de la bubule
+			let gap = 16;
+			// Calcul de la position absolue et des tailles
+			let positionOffset = $(this).position();
+			let aHeight = $(this).outerHeight()+gap;
+			let aWidth = $(this).outerWidth();
+			// Appliquer les tailles et position à la bubule
+			$("#bubulle").css("left",positionOffset.left);
+			$("#bubulle").css("top",positionOffset.top-(gap/2));
+			$("#bubulle").css("width",aWidth);
+			$("#bubulle").css("height",aHeight);
+		})
+	</script>
+</body>
+</html>

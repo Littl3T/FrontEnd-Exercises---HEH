@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From</title>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>Votre pizza</h2>
+    <form action="exercice6.html" method="get">
+        <div id="MainOptions">
+            <select name="Pizza" id="Pizza">
+                <option value="Margarita">Margarita</option>
+                <option value="BBQChicken">BBQChicken</option>
+                <option value="Aubergine">Aubergine</option>
+            </select>
+            <br>
+            <input type="radio" name="Supp" id="Supp"> <label for="Supp">avec suppléments</label>
+            <br>
+            <input type="radio" name="Supp" id="sansSupp" checked> <label for="sansSupp">sans suppléments</label>
+            <div id="SuppDiv">
+                <input type="checkbox" name="Supplements" id="Anchois" class="supp"> <label for="Anchois">Anchois</label><br>
+                <input type="checkbox" name="Supplements" id="Frites" class="supp"> <label for="Frites">Frites</label><br>
+                <input type="checkbox" name="Supplements" id="Olives" class="supp"> <label for="Olives">Olives</label><br>
+            </div>
+            
+        </div>
+        <div id="Payement">
+            <label for="payement">Payement :</label> <br>
+            <input type="radio" name="payement" id="Cash" checked> <label for="Cash">CASH</label><br>
+            <input type="radio" name="payement" id="Visa"> <label for="Visa">Visa</label>
+            <br>
+            <label for="Price">Prix :</label>
+            <p id="Price"><span id="Total">0</span>€</p>
+            <input type="submit" value="Commandez !">
+        </div>
+    </form>
+</body>
+</html>

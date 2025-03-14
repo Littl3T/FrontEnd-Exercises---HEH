@@ -1,0 +1,7 @@
+.apparition{
+    transition: all 1s ease-in-out;
+}
+.invisible{
+    transition: all 0 ease-in-out;
+    opacity: 0;
+}

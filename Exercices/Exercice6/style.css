@@ -1,0 +1,21 @@
+body{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#MainOptions, #Payement{
+    margin: 1rem;
+}
+
+#SuppDiv {
+    display: none ;
+    transition: all 250ms ease-in-out;
+}

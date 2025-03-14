@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestJquerry</title>
+    <script src="jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <h1>Test Jquerry</h1>
+    <main> 
+        <section id="stock"> 
+          <h2>En stock</h2> 
+          <article id="a473"> <h3>Article n°473</h3> <p>15€</p> </article> 
+          <article id="a270"> <h3>Article n°270</h3> <p>35€</p> </article> 
+          <article id="a168"> <h3>Article n°168</h3> <p>12€</p> </article> 
+        </section> 
+        <section id="rupture"> 
+          <h2>En rupture de stock</h2> 
+          <article id="a119"> <h3>Article n°119</h3> <p>20€</p> </article> 
+        </section> 
+      </main>
+      <script> 
+        // Exercice 1 page 60
+        $('main').attr('id','principal')
+        // Exercice 2
+        $('#a473 p').text('20€')
+        // 3
+        $('#a168, #a119').addClass('erreur')
+        // 4
+        $('.erreur').css('color','red')
+        // 5
+        $('#rupture').after('<section id="avenir"></section>')
+        // 6
+        $('#avenir').append('<h2> A venir </h2>')
+    </script>
+</body>
+</html>
