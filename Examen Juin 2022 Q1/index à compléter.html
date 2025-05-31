@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Examen Développement front-end 2022 : conteneurs</title>
+	<meta name="author" content=" votre nom ici ">
+	<style>
+		body { font-family:calibri; background-color:#ddb; font-size:1.25rem; text-align:center; margin:0; padding:0; color:#222; }
+		h1, h2, h3, h4, h5, h6, p { margin:0.25em 0; }
+		#main { 
+			max-width:1000px;
+			margin:0 auto;
+			display:grid; 
+			grid-template-columns:1fr 240px; 
+			gap:1rem; 
+			padding:1rem; 
+		}
+		.conteneur, .etiquette { background-color:#fff; padding:0.5rem; }
+		.conteneur { display:flex; flex-flow:row wrap; }
+		#conteneur1 { grid-row:1; grid-column:1; }
+		#conteneur2 { grid-row:2; grid-column:1; }
+		#conteneur3 { grid-row:3; grid-column:1; }
+		#conteneur4 { grid-row:4; grid-column:1; }
+		#conteneur1-etiquette { grid-row:1; grid-column:2; }
+		#conteneur2-etiquette { grid-row:2; grid-column:2; }
+		#conteneur3-etiquette { grid-row:3; grid-column:2; }
+		#conteneur4-etiquette { grid-row:4; grid-column:2; }
+		
+		.dechet {  background-color:#ddd; padding:1rem; margin:0.5rem; cursor:pointer; user-select:none; }
+		.dechet:hover { background-color:#bbb;  }
+		.dechet:active { background-color:#d40;  }
+		
+		.contenance { font-weight:bold; color:#0ab;}
+		.contenu { font-weight:bold; color:#0b0;}
+		.contenu.trop { color:#b10;}
+		.dechet_Titre{font-weight: bolder; font-size: 1.5rem;}
+	</style>
+	<script src="jquery.min.js"></script>
+</head>
+<body>
+	<main id="main">
+		<div id="conteneur1" class="conteneur"></div>
+		<section id="conteneur1-etiquette" class="etiquette">
+			<h2>Conteneur 1</h2>
+			<p>Contenance max : <span class="contenance">0</span> m³</p>
+			<p>Contenu : <span class="contenu">0</span> m³</p>
+		</section>
+		<div id="conteneur2" class="conteneur"></div>
+		<section id="conteneur2-etiquette" class="etiquette">
+			<h2>Conteneur 2</h2>
+			<p>Contenance max : <span class="contenance">0</span> m³</p>
+			<p>Contenu : <span class="contenu">0</span> m³</p>
+		</section>
+		<div id="conteneur3" class="conteneur"></div>
+		<section id="conteneur3-etiquette" class="etiquette">
+			<h2>Conteneur 3</h2>
+			<p>Contenance max : <span class="contenance">0</span> m³</p>
+			<p>Contenu : <span class="contenu">0</span> m³</p>
+		</section>
+		<div id="conteneur4" class="conteneur"></div>
+		<section id="conteneur4-etiquette" class="etiquette">
+			<h2>Conteneur 4</h2>
+			<p>Contenance max : <span class="contenance">0</span> m³</p>
+			<p>Contenu : <span class="contenu">0</span> m³</p>
+		</section>
+	</main>
+
+	<script>
+	var contenances = new Array(8,10,12,15,20);	// en m³
+	var dechets = new Array('planches', 'bricaillons', 'briques', 'carrelages', 'poutres', 'sable', 'contreplaqués');
+	let conteners = $('.conteneur');
+	/*
+	Exemple d'un dechet : 
+	<div class="dechet">
+		<p class="dechet_Titre">TEST</p>
+		<p class="dechet_taille">4m³</p>
+	</div>
+	*/
+
+
+	// Generation pour un conteneur des déchets aléatoires selon type et quantity, init des contenance et contenus
+	function generateDechetByContener(myDiv){
+		let nbrDechet = Math.floor(Math.random()*5);
+		if(nbrDechet == 0){nbrDechet = 1}
+		
+		let initialQuanitty = 0
+
+		for (let i=0;i<nbrDechet;i++){	
+			let typeDechet = dechets[Math.floor(Math.random()*dechets.length)];
+			let quantity = Math.floor(Math.random()*7);
+			if(quantity==0){quantity=1}
+
+			initialQuanitty = initialQuanitty + quantity // Ajout au poid total
+			let test = "<div class='dechet'><p class='dechet_Titre'>"+typeDechet+"</p><p class='dechet_taille'>"+quantity+"m³</p></div>"
+			myDiv.append(test)
+		}
+
+		let id = myDiv.attr('id')
+		let contenu = document.querySelector('#'+id+'-etiquette p .contenu')
+		contenu.innerHTML = initialQuanitty
+
+		let contenance = document.querySelector('#'+id+'-etiquette p .contenance')
+		let maxContenance = contenances[Math.floor(Math.random()*contenances.length)]
+		contenance.innerHTML=maxContenance
+
+		if(initialQuanitty>maxContenance){
+			contenu.classList.add('trop')
+		}
+	}
+	function recalculContenu(dechet){
+		let parentConteneur = dechet.parent();
+		let id = parentConteneur.attr('id')
+		let contenu = document.querySelector('#'+id+'-etiquette p .contenu')
+		let contenance = document.querySelector('#'+id+'-etiquette p .contenance')
+		
+		let dechetQuantity =  $('.dechet_taille',dechet).html().slice(0, -2);
+		let new_total = parseInt(contenu.innerHTML) - dechetQuantity
+		
+		contenu.innerHTML = new_total
+		
+		if(contenu.classList.contains('trop') && new_total<contenance.innerHTML){
+			contenu.classList.remove('trop')
+		}
+
+		dechet.remove()
+	}
+
+	$( function () {
+		$('.conteneur').each(function(){
+			generateDechetByContener($(this));
+		})
+		$('.dechet').on('click', function() {
+			recalculContenu($(this));
+		})
+	});
+
+	</script>
+</body>
+</html>

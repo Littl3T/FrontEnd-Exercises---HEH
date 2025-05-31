@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Examen Développement front-end 2022 : conteneurs</title>
+	<meta name="author" content=" votre nom ici ">
+	<style>
+		body { font-family:calibri; background-color:#dbd; font-size:1.25rem; text-align:center; margin:0; padding:0; color:#222; }
+		h1, h2, h3, h4, h5, h6, p { margin:0.25em 0; }
+		#main { 
+			max-width:1000px;
+			margin:0 auto;
+			padding:1rem; 
+			background-color:#fff; 
+		}
+		.ligne { display:flex; flex-flow:row wrap; justify-content:center; min-height: 80px; align-content: center;}
+		
+		.forme { width:80px; height:80px; background-color:#804; cursor:pointer; margin:1rem; }
+		.forme:hover { background-color:#c04; }
+		.forme:active { background-color:#ff4; }
+		.forme.goodjob { background-color:#0c4; }
+		.forme.badjob { background-color:#0008; }
+		
+		.triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+		.cercle { clip-path: circle(50% at 50% 50%); }
+		.carre { clip-path: inset(5% 5% 5% 5%);}
+		.pentagone { clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);}
+		.trapeze { clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);}
+		.parallelogramme { clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%); }
+		.losange { clip-path: polygon(50% 0%, 95% 50%, 50% 100%, 5% 50%); }
+		.octogone { clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); }
+	</style>
+	<script src="jquery.min.js"></script>
+</head>
+<body>
+	<header id="header">
+		<h1>Trouve les <span id="laforme">forme</span>s !</h1>
+		<h2 class="Timer">Cliquez sur une forme pour commencer</h2>
+	</header>
+	<main id="main">
+	</main>
+	<script>
+		let formes = new Array("triangle", "cercle", "carre", "pentagone", "trapeze", "parallelogramme", "losange", "octogone");
+		let element_par_ligne = 2
+		let niveau_target = 5
+		let started = false
+		let start = new Date
+		let finished = false
+		let niv = 1
+		let scores_fichier = 'games.txt'
+		$(function(){
+			// chargement de la page
+			let random_target = Math.floor( Math.random()*(formes.length-1))
+			let forme_target = formes[random_target]
+			$("#laforme").text(forme_target)
+			nouvelle_ligne(forme_target)
+			$('#header h1').after('<h3>Niveaux <span id="niv">1</span>/'+niveau_target+'</h3>')
+		})
+
+		setInterval(function() {
+			if(started){
+			$('.Timer').text(((new Date - start) / 1000).toPrecision(3)+ " Seconds");
+		}}, 100);
+		
+
+		function nouvelle_ligne(forme){
+			$("#main").prepend("<div class='ligne'></div>")
+			let ligne = [forme]
+			for (let index = 0; index < element_par_ligne-1; index++) {
+				ligne.push(tirer_forme_random())
+			}
+			melange(ligne)
+			ligne.forEach(function(element){
+				$('#main .ligne').first().append("<div class='forme "+element+"'></div>")
+			})
+		}
+
+		function tirer_forme_random(){
+			let random_target = Math.floor( Math.random()*(formes.length-1))
+			let forme_target = formes[random_target]
+			return forme_target
+		}
+
+		function melange(array) {
+			for (let i = array.length - 1; i > 0; i--) {
+				let j = Math.floor(Math.random() * (i + 1));
+				[array[i], array[j]] = [array[j], array[i]];
+			}
+		}
+
+		function forme_update(forme){
+			if(!started && !finished){start = new Date; started=true;}
+			if(forme.hasClass($("#laforme").text())){
+				forme.addClass('goodjob')
+			} else {
+				forme.addClass('badjob')
+			}
+			verifie_ligne_finie()
+		}
+
+		function verifie_ligne_finie(){
+			ligne = $('#main .ligne').first()
+			nb_forme = $('.forme.'+$("#laforme").text(),ligne).length
+			nb_forme_goodjob = $('.forme.goodjob.'+$("#laforme").text(),ligne).length
+			if((nb_forme==nb_forme_goodjob) && !finished){
+				element_par_ligne +=1
+				niv+=1
+				$("#niv").text(niv)
+				if(niv < niveau_target){
+					nouvelle_ligne($("#laforme").text())
+				} else{
+					started = false
+					finished = true
+					$('#main').prepend("<div class='ligne'> DONE </div>")
+				}
+			}
+		}
+
+		$('#main').on('click','.forme',function(){
+			forme_update($(this))
+		})
+	</script>
+</body>
+</html>
