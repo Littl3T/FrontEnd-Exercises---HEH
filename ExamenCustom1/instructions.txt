@@ -1,0 +1,30 @@
+Objectif :
+ - Filtrer les produits selon le nom avec un refresh quand on tape les lettres dans l'input
+ - Ajout au panier et suppression
+ - Calcul du total du panier et nombre d'articles dynamiquement
+
+Au chargement :
+ Panier vide, #total-prix est à 0,00 et #nb-items à 0
+
+Au clic d'un ajouter au panier:
+ - Récupération du nom via la cellule et prix via attribut : data-prix
+ - Nombre d'article et prix à jours
+ - Nouveau élément <li> dans #panier-items avec le nom, prix et un <span class="supprimer-item">Supprimer</span> pour le supprimer du panier
+
+Au clic d'un supprimer du panier:
+ - Suppression du li
+ - Calcul du prix total et nombre item
+
+
+Au Remplissage de l'input de filtre des produits du catalogue:
+ - Afficher les lignes dont le nom correspond
+ - Ne pas afficher ceux qui ne correspondent pas.
+
+Exemple d'un article ajouté:
+<li>
+    T-shirt imprimé : 19,99 (3x) 
+    <span class="supprimer-item">Supprimer</span>
+</li>
+
+
+Bonne chance !

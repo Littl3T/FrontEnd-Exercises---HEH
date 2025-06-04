@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Examen JS - Catalogue et Panier</title>
+    <style>
+        html {
+            background-color: #f9f9f9;
+            font-family: Tahoma, sans-serif;
+            font-size: 100%;
+            color: #333;
+            text-align: center;
+        }
+        section {
+            margin: 1rem auto;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0.4rem;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-bottom: 0.5rem;
+        }
+        input[type="text"] {
+            font-size: 1rem;
+            padding: 0.3rem 0.6rem;
+            margin-bottom: 0.5rem;
+            width: 60%;
+            border: 1px solid #aaa;
+            border-radius: 0.3rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        button.ajouter {
+            padding: 0.3rem 0.6rem;
+            font-size: 1rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            opacity: 0.9;
+        }
+        button.ajouter:hover {
+            opacity: 1;
+            background-color: #218838;
+        }
+        #panier-summary {
+            margin-top: 1rem;
+            font-weight: bold;
+            user-select: none;
+        }
+        #panier-items {
+            margin-top: 0.5rem;
+            list-style: none;
+            padding-left: 0;
+        }
+        #panier-items li {
+            text-align: left;
+            margin-bottom: 0.3rem;
+            user-select: none;
+        }
+        .supprimer-item {
+            color: #c00;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+        footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+    <script src="jquery.min.js"></script>
+</head>
+<body>
+
+    <!-- Section 1 : Catalogue de produits -->
+    <section id="catalogue">
+        <h2>Catalogue de Produits</h2>
+        <input type="text" id="filtre-catalogue" placeholder="Rechercher dans le catalogue…">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prix (€)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-prix="19.99">
+                    <td>T-shirt imprimé</td>
+                    <td>19,99</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+                <tr data-prix="12.50">
+                    <td>Casquette unisexe</td>
+                    <td>12,50</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+                <tr data-prix="29.00">
+                    <td>Jeans slim</td>
+                    <td>29,00</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+                <tr data-prix="8.75">
+                    <td>Chaussettes (lot de 3)</td>
+                    <td>8,75</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+                <tr data-prix="45.20">
+                    <td>Pull à col rond</td>
+                    <td>45,20</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+                <tr data-prix="15.30">
+                    <td>Ceinture en cuir</td>
+                    <td>15,30</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+                <tr data-prix="22.40">
+                    <td>Chaussures sport</td>
+                    <td>22,40</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+                <tr data-prix="5.99">
+                    <td>Casquette de bain</td>
+                    <td>5,99</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+                <tr data-prix="34.50">
+                    <td>Veste imperméable</td>
+                    <td>34,50</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+                <tr data-prix="9.80">
+                    <td>Gants d'hiver</td>
+                    <td>9,80</td>
+                    <td><button class="ajouter">Ajouter au panier</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Section 2 : Panier -->
+    <section id="panier">
+        <h2>Votre Panier</h2>
+        <div id="panier-summary">
+            Articles dans le panier : <span id="nb-items">0</span> - Montant total : <span id="total-prix">0,00</span> €
+        </div>
+        <ul id="panier-items">
+            <!-- Les lignes d’articles ajoutés apparaîtront ici -->
+        </ul>
+    </section>
+
+    <footer>
+        Examen Front-end par Tom Deneyer - JavaScript/JQuery
+    </footer>
+
+    <script>
+        let panier = []
+        let panier_nombre_produits = 0
+        let panier_prix = 0.0
+        // Pour le panier : chaque élément est un tableau composée par index de NOM - NOMBRE - PRIX UNITE
+
+        $(document).ready(function() {
+            mise_a_jour_articles()
+        });
+
+        function ajouter_au_panier(item){
+            let produit_prix = item.attr('data-prix')
+            let produit_nom = $('td',item).first().text()
+            let DANSPANIER = false
+            let index = undefined
+            for(prod of panier){
+                if(prod[0] == produit_nom){
+                    DANSPANIER = true
+                    index = panier.indexOf(prod)
+                }
+            }
+            if(DANSPANIER){
+                panier[index][1]++
+                let produit_courant = $('#panier-items li')[parseInt(index)]
+                produit_courant.innerHTML  =(produit_nom+ ': '+produit_prix+' ('+panier[index][1]+'x) <span class="supprimer-item">Supprimer</span>')
+            }
+            else{
+                panier.push([produit_nom,1,produit_prix])
+                $('#panier-items').append('<li>'+produit_nom+' : '+produit_prix+' (1x) <span class="supprimer-item">Supprimer</span> </li>')
+            }
+            mise_a_jour_articles()
+        }
+
+        function supprimer_article(item){
+            ligne_panier = item.text()
+            let index = undefined
+            let FOUND = false
+            for(prod of panier){
+                if(ligne_panier.includes(prod[0])){
+                    index = panier.indexOf(prod)
+                    FOUND = true
+                }
+            }
+            if(FOUND && panier[index][1]==1){
+                panier.splice(index,1)
+                item.remove()
+            } else if(FOUND && panier[index][1]>1){
+                panier[index][1]--
+                let produit_prix = panier[index][2]
+                let produit_nom = panier[index][0]
+                let produit_courant = $('#panier-items li')[parseInt(index)]
+                produit_courant.innerHTML  =(produit_nom+ ': '+produit_prix+' ('+panier[index][1]+'x) <span class="supprimer-item">Supprimer</span>')
+            }
+            else{
+                alert("problème de suppression du produit")
+            }
+            mise_a_jour_articles()
+        }
+
+        function mise_a_jour_articles(){
+            let total_prix = 0
+            let total_prod = 0
+            for(produits of panier){
+                total_prix += produits[1]*produits[2]
+                total_prod += produits[1]
+            }
+            panier_nombre_produits = total_prod
+            panier_prix = total_prix.toFixed(2)
+
+            $('#nb-items').text(panier_nombre_produits)
+            $('#total-prix').text(panier_prix)
+        }
+
+        // Filtre du catalogue
+        $('#filtre-catalogue').on('input',function(){
+            articles = $("tbody tr")
+            let valeur_filtre = $('#filtre-catalogue').val()
+            articles.each(function(index){
+                let produit = $('td',articles[index]).first().text()
+                if(!produit.includes(valeur_filtre)){
+                    articles[index].style.display = "none"
+                } else(articles[index].style.display = "table-row")
+            })
+        });
+
+        // Listeners pour les boutons
+        $("tbody tr").on('click', function(){
+            ajouter_au_panier($(this))
+        })
+        $(document).on('click', '.supprimer-item', function() {
+        supprimer_article($(this).parent());
+        });
+    </script>
+</body>
+</html>
