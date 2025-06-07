@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Examen Développement front-end 2022</title>
+	<meta name="author" content="">
+	<style>
+		body { font-family:calibri; font-size:1.5rem; text-align:center; margin:0; padding:0; color:#222; }
+		header { padding:1%; border-bottom: 2px solid #222; display:flex; justify-content:space-around; flex-wrap:wrap; }
+		header#animaux div { width:6.166666%; padding:1%;}
+		header#animaux div.vide { opacity:0.5; }
+		header#animaux div img { width:100%; }
+		#plus { font-size:5rem; font-weight:bold; }
+		.bouton { cursor:pointer; }
+		.bouton:hover, .bouton:focus { background-color:#ccc; }
+		.bouton:active { background-color:#dd8; }
+		
+		#total { font-size:2rem; }
+		#total.vide { background-color:#6d6; }
+		#main { padding:1%; text-align:left; }
+		#main img { width:64px; margin:8px; }
+		
+		@media only screen and (max-width: 960px) {
+			header#animaux div { width:12.666666%; padding:2%;}
+		}
+		@media only screen and (max-width: 640px) {
+			header#animaux div { width:18.5%; padding:3%;}
+		}
+	</style>
+	<script src="jquery.min.js"></script>
+</head>
+<body>
+	<header id="animaux">
+		<div class="bouton"><img src="img/bouc.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/vache.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/mouton.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/oiseau.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/lapin.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/chat.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/chien.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/poulpe.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/zebre.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/girafe.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/elephant.png" alt=""><br><span>0</span></div>
+		<div class="bouton"><img src="img/tigre.png" alt=""><br><span>0</span></div>
+	</header>
+	<header id="total">
+		<div><span>0</span></div>
+	</header>
+		
+	<main id="main">
+	</main>
+	
+	<script>
+		let total = 0
+		$(function(){
+			// Chargement de la page, génération pour chaque animal d'un random entre 1 et 4
+			$("div","#animaux").each(function(){
+				load_animal($(this))
+			})
+			// Update du total
+			update_total()
+		})
+		function load_animal(animal_button){
+			// Pour un animal à la génération, attribution d'un randint
+			let random_int = Math.floor(Math.random()*4 +1)
+			$("span",animal_button).text(random_int)
+		}
+		function update_total(){
+			total = 0
+			// Somme de tous les nombres des span des animaux
+			$("div span","#animaux").each(function(){
+				total += parseInt($(this).text())
+			})
+			$("div span","#total").text(total)
+			// Check pour la fin si total = 0
+			if(total == 0){
+				$("#total").addClass('vide')
+			}
+		}
+		function click_animal(animal){
+			if(parseInt($("span",animal).text())>0){
+				// On fait -1 et update le total
+				$("span",animal).text(parseInt($("span",animal).text())-1)
+				update_total()
+				// Ajout de l'image dans le main
+				let src = $("img",animal).attr("src")
+				$("#main").append("<img src='"+src+"' alt=''>")
+			}
+			if(parseInt($("span",animal).text()) == 0){
+				animal.addClass("vide")
+			}
+		}
+		$(".bouton").on("click",function(){
+			// Listener sur les click d'un animal
+			click_animal($(this))
+		})
+	</script>
+</body>
+</html>
