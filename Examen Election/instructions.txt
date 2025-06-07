@@ -1,0 +1,9 @@
+Je suppose c'est les instructions, mais j'ai pas récup le fichier donc c'est selon ce que je pense.
+
+Au chargement de la page, définir un nombre donné de nombre de votes à faire (entre 10 et 20).
+Le nombre de vote utilisé est à 0, et tous les candidats on 0 vote chacun sur un maximum qui est le nombre de vote possible total.
+
+A chaque clic sur un candidat, on consomme un vote pour l’attribuer à ce candidat.
+Dès que tous les votes sont utilisés, On détermine celui avec le plus de nombre de voix (en %) et il devient président via #winner
+
+Update donc des graphiques meter avec les value qui s'incrémentes au clic, ainsi que le % de vote des candidtats.

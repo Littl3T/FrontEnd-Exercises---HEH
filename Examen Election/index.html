@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système de Vote</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Élection du Président</h1>
+        <p>Cliquez sur un candidat pour voter :</p>
+        <div id="candidates">
+            <div class="candidate" data-name="Candidate A">
+                <span class="candidate-name">Candidate A</span>: 
+                <span class="votes">0</span> votes
+                <meter class="vote-meter" min="0" max="0" value="0"></meter>
+                <p class="percentage"><span class="value">0</span>% des votes</p>
+            </div>
+            <div class="candidate" data-name="Candidate B">
+                <span class="candidate-name">Candidate B</span>: 
+                <span class="votes">0</span> votes
+                <meter class="vote-meter" min="0" max="0" value="0"></meter>
+                <p class="percentage"><span class="value">0</span>% des votes</p>
+            </div>
+            <div class="candidate" data-name="Candidate C">
+                <span class="candidate-name">Candidate C</span>: 
+                <span class="votes">0</span> votes
+                <meter class="vote-meter" min="0" max="0" value="0"></meter>
+                <p class="percentage"><span class="value">0</span>% des votes</p>
+            </div>
+        </div>
+        <p id="totalVotes">Nombre de votes restant: <span class='vote_left'>1</span>/<span class='vote_tot'>1</span></p>
+        <div id="winner"></div>
+    </div>
+    <script>
+        let vote_total = 0
+        let vote_left = 0
+        $(function(){
+            // Chargement de la page : Générer le nombre de voix maximum
+            vote_total = Math.floor(Math.random()*11) +10
+            vote_left = vote_total
+            $(".vote_tot").text(vote_total)
+            $(".vote_left").text(vote_total)
+            $(".vote-meter").each(function(){
+                // Update du meter avec value max en fonction du nombre de vote
+                $(this).attr("max",vote_total)
+            })
+        })
+        function vote(candidate){
+            // On check en 1er si il reste +0 vote à faire, si oui update des infos, si = 0 détection du gagant
+            if(vote_left>0){
+                $(".votes",candidate).text(parseInt($(".votes",candidate).text()) + 1)
+                $(".vote-meter",candidate).attr("value",parseInt($(".votes",candidate).text()))
+                $(".value",candidate).text(((parseInt($(".votes",candidate).text())/vote_total)*100).toFixed(2))
+                vote_left--
+                $(".vote_left").text(vote_left)
+            }
+            if(vote_left == 0){
+                check_winner()
+            }
+        }
+        function check_winner(){
+            // Détection du gagant
+            let winner = undefined
+            let max_vote = 0
+            $(".candidate").each(function(){
+                if(parseInt($(".votes",this).text())>max_vote){
+                    max_vote=parseInt($(".votes",this).text())
+                    winner = $(this).attr("data-name")
+                } else if(parseInt($(".votes",this).text())==max_vote){
+                    winner += " & " + $(this).attr("data-name")
+                }
+            })
+            $('#winner').text(winner)
+        }
+        $(".candidate").on("click",function(){
+            // Listener sur le clic des candidats
+            vote($(this))
+        })
+    </script>
+</body>
+</html>
