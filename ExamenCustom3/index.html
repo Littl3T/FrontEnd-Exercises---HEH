@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Examen JS - Lazy Scroll & Back to Top</title>
+  <style>
+    /* Layout général */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      background: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+      z-index: 1000;
+    }
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .section {
+      background: #fff;
+      margin: 2rem 0;
+      padding: 1rem;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: none;
+      padding: 0.5rem 1rem;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+  <script src="jquery-3.7.1.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Exercice Lazy Scroll</h1>
+  </header>
+
+  <main id="content">
+    <!-- Les sections seront générées ici -->
+  </main>
+
+  <button id="back-to-top">↑ Haut de page</button>
+
+  <script>
+    /* Instructions :
+     * 1. Au chargement, générer N sections (ex. N = 10) dans #content.
+     *    Chaque section aura la classe .section et un titre <h2>Section X</h2> et du contenu texte.
+     *
+     * 2. Implémenter le "lazy scroll" : lorsque chaque .section entre dans le viewport, lui ajouter la classe .visible 
+     *
+     * 3. Gérer l'événement de scroll :
+     *    - Afficher #back-to-top quand scrollTop > 300px, le masquer sinon.
+     *
+     * 4. Sur clic #back-to-top, animer le scroll vers le haut (800ms).
+     *
+     * Glhf
+     */
+
+    $(document).ready(function() {
+      // 1. Générer dynamiquement 10 sections
+      const N = 25;
+      let scrollTop = $(document).scrollTop()
+      let windowHeight = $(window).height()
+
+      for (let i = 1; i <= N; i++) {
+        $('#content').append(
+          `<div class="section" id="section${i}">
+             <h2>Section ${i}</h2>
+             <p>Contenu de la section ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+           </div>`
+        );
+      }
+
+      // Votre code : lazy scroll, back-to-top, scroll effects, etc.
+      function lazy_load(){
+        scrollTop = $(document).scrollTop()
+        windowHeight = $(window).height()
+        $(".section").each(function(){
+          let top_px = $(this).offset().top
+          if( top_px<= scrollTop+windowHeight){
+            $(this).addClass('visible')
+          }
+        }) 
+      }
+      
+      $(window).on("scroll",function(){
+        lazy_load()
+        if($(document).scrollTop()>300){
+          $('#back-to-top').slideDown(500)
+        } else $('#back-to-top').slideUp(500)
+      })
+
+      $("#back-to-top").on("click",function(){
+        $('html, body').animate({ scrollTop: 0 }, 800);
+      })
+      
+    });
+  </script>
+</body>
+</html>
