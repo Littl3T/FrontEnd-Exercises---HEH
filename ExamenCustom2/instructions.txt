@@ -1,0 +1,19 @@
+Pour cet examen, l'objectif est de créer une page de création de profil utilisateur aavec informations perso.
+
+Au chargement:
+    - Default value du slider d'âge à 27ans
+    - Vider tous les messages du #form-message
+
+A la validation du form:
+    - Vérifier que tous les champs ne sont pas vides (nom, email, radio genre, âge, bio...)
+    - Si un champs n'est pas okay, faire un message custom pour rpévenir quel champ est mauvais.
+    - Si pas complet afficher un message dans le #form-message comme quoi il faut bien tout compléter
+    - Si tout est okay alors affichage du #profile-summary et désafficher le #profile-form
+
+Si clic sur le bouton effacer du profile-form
+    - Reset de tous les champs d'input
+
+Si clic sur modifier du summary, alors désafficher le summary et réafficher le form avec valeurs autocomplétées via une fonction pour set les valeurs du form
+
+
+Bonne chance !
